@@ -4,7 +4,57 @@
 function login(){ 
     var usuario = document.getElementById("usuario").value; 
     var password = document.getElementById("contraseña").value;
+    var contraseñaDB = "";
 
+    var http;
+    http = new XMLHttpRequest;
+
+    http.onreadystatechange = function(){
+        if (http.readyState==4 && http.status==200){
+            getSelector();
+        }
+    }
+    //ENVIO USUARIO Y GUARDO SU CONTRASEÑA COMO RESULTADO (guardo en variable el resultado de la función).
+    //-Si no existe, devuelve -1
+    contraseñaDB= buscarUsuario(usuario);
+
+    if (password==contraseñaDB) { 
+    location.replace("perfil.html");
+    }  
+
+    if (password==-1) { 
+        alert("El usuario no existe.")
+    }
+
+    if (usuario=="" && password=="") { 
+    alert("Por favor, introduce usuario y contraseña.")
+    } 
+} 
+
+
+//BUSCAR USUARIO----------------------------------------------------------------------------------------------------
+
+function buscarUsuario(usuario){
+    var http;
+    http = new XMLHttpRequest;
+
+    http.onreadystatechange = function(){
+        if (http.readyState==4 && http.status==200){
+            alert(http.responseText);
+            return http.responseText;
+        }
+    }
+    
+    //ENVIO USUARIO 
+        http.open("POST","jdbc:mysql://192.168.56.50/urbex", true);
+        http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        http.send("usuario="+document.getElementById("usuario").value);
+}
+
+
+
+//ENVIAR USUARIO REGISTRADO A LA BASE DE DATOS-------------------------------------------------------------------------
+function enviarUsuario(){
     var http;
     http = new XMLHttpRequest;
 
@@ -15,46 +65,7 @@ function login(){
     }
     http.open("POST","jdbc:mysql://192.168.56.50/urbex", true);
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    http.send("usuario="+document.getElementById("usuario").value+"&&contrasena="+document.getElementById("contraseña").value);
-    
-    //Extraer 
-    //extraer contraseña de db y meterla en una 
-
-   //------>> buscar usuario (usuario) y su contraseña.
-   
-
-   
-
-    if (usuario=="usuario" && password=="contraseña") { 
-    location.replace("perfil.html");
-    }  
-
-    if (usuario!="usuario" && password!="contraseña") { 
-        alert("Usuario o contraseña incorrectos.")
-    }
-
-    if (usuario=="" && password=="") { 
-    alert("Por favor, introduce usuario y contraseña.")
-    } 
-} 
-
-
-//ENVIAR USUARIO REGISTRADO A LA BASE DE DATOS---------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-function enviarUsuario(){
-    var http;
-    http = new XMLHttpRequest;
-
-      http.onreadystatechange = function(){
-        if (http.readyState==4 && http.status==200){
-            getSelector();
-            alert(http.responseText);
-        }
-    }
-    http.open("POST","jdbc:mysql://192.168.56.50/urbex", true);
-    http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    http.send("usuario="+document.getElementById("usuario").value+"&&correo="+document.getElementById("correo").value+"&&contraseña="+document.getElementById("contraseña1").value+"&&rol=1");
-
-    alert(document.getElementById("usuario").value);
+    http.send("usuario="+document.getElementById("usuario").value+"&&correo="+document.getElementById("correo").value+"&&contraseña="+document.getElementById("contraseña1").value);
 
 }
 
@@ -65,33 +76,6 @@ function enviarUsuario(){
 function funcionesRegistro(){
     if (repetirContra()){
     enviarUsuario()};
-}
-
-
-//--
-//Obtener dos listas q me pinten usuarios con ese nombre y correo con ese nombre
-
-function comprobarUsuario(){
-    var usuario=document.getElementById("usuario").value;
-    var correo=document.getElementById("correo").value;
-
-    if(XPathResult.length==0){
-        enviarUsuario();
-    }
-
-    var http;
-    http = new XMLHttpRequest;
-
-        //???? que ponemos e divTaula?
-    http.onreadystatechange = function(){
-        if (http.readyState==4 && http.status==200){
-            const usuario =http.responseText;
-        }
-    }
-
-    http.open("GET","jdbc:mysql://192.168.56.50/urbex"+document.getElementById("usuario").value, true);
-    http.open("GET","jdbc:mysql://192.168.56.50/urbex"+document.getElementById("correo").value, true);
-    http.send();
 }
 
 //Comparar contraseñas registro (sean iguales)
@@ -107,24 +91,6 @@ function repetirContra(obj){
         alert("Las contraseñas no coinciden.");
         return false;
     }
-}
-
-
-
-//BUSCAR USUARIO
-
-function buscarUsuario(){
-    var http;
-    http = new XMLHttpRequest;
-
-    http.onreadystatechange = function(){
-        if (http.readyState==4 && http.status==200){
-            alert(http.responseText);
-        }
-    }
-
-    http.open("GET","http://localhost:8080/Urbex/UsuarioServlet", true);
-    http.send();
 }
 
 //PINTAR DATOS-------------------------------------------------------------------------------------------------
