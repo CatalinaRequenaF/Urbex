@@ -44,9 +44,10 @@ function enviarUsuario(){
     var http;
     http = new XMLHttpRequest;
 
-    http.onreadystatechange = function(){
+      http.onreadystatechange = function(){
         if (http.readyState==4 && http.status==200){
             getSelector();
+            alert(http.responseText);
         }
     }
     http.open("POST","jdbc:mysql://192.168.56.50/urbex", true);
@@ -118,11 +119,11 @@ function buscarUsuario(){
 
     http.onreadystatechange = function(){
         if (http.readyState==4 && http.status==200){
-            document.getElementById("divTaula").innerHTML=http.responseText;
+            alert(http.responseText);
         }
     }
 
-    http.open("GET","http://localhost:8080/Urbex/UsuarioServlet="+document.getElementById("selector").value, true);
+    http.open("GET","http://localhost:8080/Urbex/UsuarioServlet", true);
     http.send();
 }
 
