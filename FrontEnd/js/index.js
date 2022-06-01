@@ -5,12 +5,23 @@ function login(){
     var usuario = document.getElementById("usuario").value; 
     var password = document.getElementById("contraseña").value;
 
+    var http;
+    http = new XMLHttpRequest;
 
+    http.onreadystatechange = function(){
+        if (http.readyState==4 && http.status==200){
+            getSelector();
+        }
+    }
+    http.open("POST","jdbc:mysql://192.168.56.50/urbex", true);
+    http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    http.send("usuario="+document.getElementById("usuario").value+"&&contrasena="+document.getElementById("contraseña").value);
     
     //Extraer 
     //extraer contraseña de db y meterla en una 
 
    //------>> buscar usuario (usuario) y su contraseña.
+   
 
    
 
