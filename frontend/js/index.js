@@ -55,7 +55,7 @@ function enviarUsuario(){
     http.onreadystatechange = function(){
         if (http.readyState==4 && http.status==200){
             getSelector();
-            alert(http.responseText);
+            //location.replace("../html/login.html");
         }
 
     }
@@ -63,7 +63,7 @@ function enviarUsuario(){
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     http.send("usuario="+document.getElementById("usuario").value+"&&email="+document.getElementById("email").value+"&&contrasena="+document.getElementById("contraseña1").value);
 
-    
+    //location.replace("login.html");
 
 }
 //Comprueba usuario y conraseña para hacer el login
@@ -81,10 +81,14 @@ function comprobarUsuario(){
     http.open("POST","http://localhost:8080/Urbex/ComprobarUsuario", true);
     http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     http.send("usuario="+document.getElementById("usuario").value+"&&contrasena="+document.getElementById("contrasena").value);
+
+    
 }
 
 function funcionesRegistro(){
-    enviarUsuario();
+    if (repetirContra()){
+    enviarUsuario()};
+  
 }
 
 /*SUBIR PUBLICACIÓN*/
@@ -108,8 +112,8 @@ function subirLugar(){
 
 
 function repetirContra(obj){
-    contraseña1 = document.getElementById("contraseña1");
-    contraseña2 = document.getElementById("contraseña2");
+    contraseña1 = document.getElementById("contraseña1").value;
+    contraseña2 = document.getElementById("contraseña2").value;
 
     if (contraseña1 == contraseña2){
         alert("si")
