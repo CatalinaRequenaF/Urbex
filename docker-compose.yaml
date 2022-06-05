@@ -1,0 +1,41 @@
+version: '3'
+services:
+  mysql:
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: urbex
+      MYSQL_USER: urbex
+      MYSQL_PASSWORD: urbex
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./urbex.sql:/docker-entrypoint-initdb.d/urbex.sql
+    ports:
+      - 3306:3306
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - 8080:80
+
+  urbex:
+    image: tomcat:9-jdk16-openjdk
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./backend/entrypoint.sh:/entrypoint.sh
+      - ./backend/run.sh:/usr/local/tomcat/bin/run.sh
+      - ./backend/src:/src
+      - ./backend/tomcat/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+      - ./backend/tomcat/context.xml:/usr/local/tomcat/webapps.dist/manager/META-INF/context.xml
+    environment:
+      APP_NAME: 'main'
+      APP_CLASS: 'Urbex'
+    entrypoint: ["/entrypoint.sh"]
+    command: ["run.sh"]
+
+volumes:
+  mysql-data:
